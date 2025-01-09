@@ -26,6 +26,8 @@ function PhotoDetails() {
     fetchData();
   }, [id]);
 
+  const fallbackImage = "https://via.placeholder.com/500x400"; 
+
   if (isLoading) {
     return (
       <div className="text-center text-xl font-semibold mt-10">Loading...</div>
@@ -45,25 +47,30 @@ function PhotoDetails() {
       <div className="flex flex-wrap md:flex-nowrap gap-6">
         <div className="flex-1">
           <img
-            src={data.coverImageUrl || "https://via.placeholder.com/500x400"}
+            src={data.coverImageUrl || fallbackImage}
             alt={data.title || "Detail Image"}
-            className="w-full rounded-lg shadow-lg"
+            className="w-full h-screen object-cover rounded-lg shadow-lg"
+            onError={(e) => e.target.src = fallbackImage} 
           />
         </div>
+
         <div className="flex-1">
           <h1 className="text-2xl font-bold mb-2">{data.title}</h1>
-          <div className="border-t-4 border-gray-800 mb-4"></div>
-          <p className="text-gray-700  font-medium mb-4">{data.subject}</p>
-          <div className="grid grid-cols-3 gap-4">
-            {data.galleryPhotos?.map((img, idx) => (
-              <div key={idx} className="overflow-hidden rounded-lg shadow-md">
-                <img
-                  src={img.imageUrl || "https://via.placeholder.com/100x100"}
-                  alt={`Gallery ${idx}`}
-                  className="w-full h-auto object-cover"
-                />
-              </div>
-            ))}
+          <div className="border-t-4 border-gray-400 mb-4"></div>
+          <p className="text-gray-700 font-medium mb-4">{data.subject}</p>
+          <div className="overflow-y-auto max-h-screen scrollbar-hidden">
+            <div className="grid grid-cols-3 gap-4">
+              {data.galleryPhotos?.map((img, idx) => (
+                <div key={idx} className="overflow-hidden rounded-lg shadow-md">
+                  <img
+                    src={img.imageUrl || fallbackImage}
+                    alt={`Gallery ${idx}`}
+                    className="w-full h-auto object-cover"
+                    onError={(e) => e.target.src = fallbackImage} 
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
